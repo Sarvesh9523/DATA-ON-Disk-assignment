@@ -1,0 +1,23 @@
+[
+  {
+    "user": {
+      "name": "sarvesh",
+      "phone": "9523173603",
+      "address": "Noida"
+    },
+    "items": [
+      {
+        "id": 3,
+        "title": "Pasta",
+        "description": "Italian delight",
+        "price": 10,
+        "rating": 4.2,
+        "image": "/src/assets/images/pasta.jpg",
+        "deliveryDay": "Thursday",
+        "preorder": false,
+        "preorderFor": "Thursday"
+      }
+    ],
+    "date": "2025-09-24T19:31:38.320Z"
+  }
+]
