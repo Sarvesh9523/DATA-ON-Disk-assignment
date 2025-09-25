@@ -16,8 +16,12 @@
       "dest": "backend/api/server.js"
     },
     {
+      "src": "/assets/(.*)",
+      "dest": "kitchen/dist/assets/$1"
+    },
+    {
       "src": "/(.*)",
-      "dest": "kitchen/index.html"
+      "dest": "kitchen/dist/index.html"
     }
   ]
 }
