@@ -45,7 +45,7 @@ export default function CartPage() {
     };
 
     try {
-      await axios.post("http://localhost:5000/api/orders", orderDetails);
+      await axios.post("/api/orders", orderDetails);
       toast.success("Order placed successfully!");
       dispatch(clearCart());
 
