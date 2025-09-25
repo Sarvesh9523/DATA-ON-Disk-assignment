@@ -6,6 +6,7 @@ import axios from "axios";
 import "react-toastify/dist/ReactToastify.css";
 import { getTimeLeft } from "../utils/timeleft"; // countdown utility
 
+
 export default function CartPage() {
   const cartItems = useSelector((state) => state.cart.items);
   const dispatch = useDispatch();
@@ -45,20 +46,17 @@ export default function CartPage() {
     };
 
     try {
-  await axios.post(
-    "https://data-on-disk-assignment.onrender.com/api/orders",
-    orderDetails
-  );
-  toast.success("Order placed successfully!");
-  dispatch(clearCart());
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/orders`, orderDetails);
+      toast.success("Order placed successfully!");
+      dispatch(clearCart());
 
-  setName("");
-  setPhone("");
-  setAddress("");
-} catch (error) {
-  console.error(error);
-  toast.error("Failed to place order!");
-}
+      setName("");
+      setPhone("");
+      setAddress("");
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to place order!");
+    }
 
   };
 
