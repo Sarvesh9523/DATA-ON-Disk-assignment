@@ -21,29 +21,27 @@ export default function FoodDetail() {
   const currentDay = days[today.getDay()];
   const currentHour = today.getHours();
 
-  // ✅ Order window: 7 AM on one day until 1 AM.
-  const withinTimeWindow = currentHour >= 7 || currentHour < 1;
+  // ✅ Check if the current time is within the 7 AM to 2 PM window
+  const withinTimeWindow = currentHour >= 7 && currentHour < 14;
 
-  // ✅ This logic treats the hour after midnight (12 AM - 1 AM)
-  //    as belonging to the *previous* day's ordering window.
-  let adjustedDay = currentDay;
-  if (currentHour < 1) {
-    const prevIndex = today.getDay() === 0 ? 6 : today.getDay() - 1;
-    adjustedDay = days[prevIndex];
-  }
+  // ✅ Check if the food can be ordered for today
+  const canOrderToday = currentDay === food.deliveryDay && withinTimeWindow;
 
-  // ✅ Can order "now" only if the adjusted day matches the food's delivery day.
-  const canOrderToday = adjustedDay === food.deliveryDay && withinTimeWindow;
+  // ✅ NEW: Logic to determine if the button should be disabled.
+  // It's disabled ONLY if it's the correct day but the wrong time.
+  const isButtonDisabled = currentDay === food.deliveryDay && !withinTimeWindow;
 
   // --- Button and Handler Logic ---
 
+  // ✅ UPDATED: Button label logic for better clarity.
   let buttonLabel = "";
-  if (!withinTimeWindow) {
-    buttonLabel = "Ordering Closed (7 AM – 1 AM)";
-  } else if (canOrderToday) {
-    buttonLabel = "Order Now";
-  } else {
+  if (canOrderToday) {
+    buttonLabel = "Order Now (7 AM – 2 PM)";
+  } else if (currentDay !== food.deliveryDay) {
     buttonLabel = `Preorder (Next ${food.deliveryDay})`;
+  } else {
+    // This case handles when it's the correct day but outside the ordering window
+    buttonLabel = "Ordering Closed (7 AM – 2 PM)";
   }
 
   const handleAddToCart = () => {
@@ -86,11 +84,13 @@ export default function FoodDetail() {
         {/* Order Button */}
         <button
           onClick={handleAddToCart}
-          disabled={!withinTimeWindow}
+          // ✅ UPDATED: Use the new disabled logic
+          disabled={isButtonDisabled}
           className={`mt-4 px-4 py-2 rounded text-white ${
-            withinTimeWindow
-              ? "bg-green-600 hover:bg-green-700"
-              : "bg-gray-400 cursor-not-allowed"
+            // ✅ UPDATED: Style the button based on the new disabled logic
+            isButtonDisabled
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-green-600 hover:bg-green-700"
           }`}
         >
           {buttonLabel}

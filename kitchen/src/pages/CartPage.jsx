@@ -46,7 +46,9 @@ export default function CartPage() {
     };
 
     try {
+      // await axios.post(`${import.meta.env.VITE_API_URL}/api/orders`, orderDetails);
       await axios.post(`${import.meta.env.VITE_API_URL}/api/orders`, orderDetails);
+
       toast.success("Order placed successfully!");
       dispatch(clearCart());
 
