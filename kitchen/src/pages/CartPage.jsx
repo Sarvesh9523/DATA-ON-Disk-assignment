@@ -45,17 +45,21 @@ export default function CartPage() {
     };
 
     try {
-      await axios.post("http://localhost:5000/api/orders", orderDetails);
-      toast.success("Order placed successfully!");
-      dispatch(clearCart());
+  await axios.post(
+    "https://data-on-disk-assignment.onrender.com/api/orders",
+    orderDetails
+  );
+  toast.success("Order placed successfully!");
+  dispatch(clearCart());
 
-      setName("");
-      setPhone("");
-      setAddress("");
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to place order!");
-    }
+  setName("");
+  setPhone("");
+  setAddress("");
+} catch (error) {
+  console.error(error);
+  toast.error("Failed to place order!");
+}
+
   };
 
   if (cartItems.length === 0)
