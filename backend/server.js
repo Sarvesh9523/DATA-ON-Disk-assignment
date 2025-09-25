@@ -8,7 +8,9 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: 'https://data-on-disk-assignment.vercel.app'
+}));
 app.use(bodyParser.json());
 
 // Create "orders" folder if it doesn't exist
