@@ -11,7 +11,7 @@ export default function FoodCard({ food }) {
       />
 
       {/* Content */}
-      <div className="p-4 flex flex-col flex-grow justify-between">
+      <div className="p-4 flex  flex-grow justify-between">
         <div>
           <h3 className="text-lg md:text-xl font-semibold mb-1 truncate">
             {food.title}
