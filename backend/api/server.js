@@ -1,51 +1,39 @@
 const express = require("express");
+const fs = require("fs");
+const path = require("path");
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const { kv } = require("@vercel/kv"); 
 
 const app = express();
+const PORT = 5000;
 
 // Middleware
 app.use(cors());
 app.use(bodyParser.json());
 
+// Create "orders" folder if it doesn't exist
+const ordersDir = path.join(__dirname, "orders");
+if (!fs.existsSync(ordersDir)) fs.mkdirSync(ordersDir);
+
+const ordersFile = path.join(ordersDir, "orders.json");
+
 // POST endpoint to save order
-// The function must be async to use 'await'
-app.post("/api/orders", async (req, res) => {
-  const newOrder = req.body;
+app.post("/api/orders", (req, res) => {
+  const order = req.body;
 
-  try {
-    // ✅ Get existing orders from the KV store, instead of reading a file
-    let orders = await kv.get('orders');
-
-    // If no orders exist yet, initialize an empty array
-    if (!orders) {
-      orders = [];
-    }
-
-    // Add the new order
-    orders.push(newOrder);
-
-    // ✅ Save the updated array back to the KV store, instead of writing to a file
-    await kv.set('orders', orders);
-
-    res.status(200).json({ message: "Order saved successfully!" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Failed to save order." });
+  let orders = [];
+  if (fs.existsSync(ordersFile)) {
+    const data = fs.readFileSync(ordersFile);
+    orders = JSON.parse(data);
   }
+
+  orders.push(order);
+
+  fs.writeFileSync(ordersFile, JSON.stringify(orders, null, 2));
+
+  res.status(200).json({ message: "Order saved successfully!" });
 });
 
-// GET endpoint to retrieve all orders (optional, but useful)
-app.get("/api/orders", async (req, res) => {
-  try {
-    const orders = await kv.get('orders');
-    res.status(200).json(orders || []);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Failed to retrieve orders." });
-  }
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
 });
-
-
-module.exports = app; // ✅ Export the app for Vercel
